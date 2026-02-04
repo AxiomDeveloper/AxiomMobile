@@ -1,3 +1,5 @@
+import { AxiomBus } from '../core/bus.js';
+
 class AxiomSidebar extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
@@ -16,15 +18,7 @@ class AxiomSidebar extends HTMLElement {
           <button data-panel="tasks" class="sidebar-btn" title="Tasks">
             <i data-feather="check-square" class="w-6 h-6"></i>
           </button>
-          <button data-panel="browser" class="sidebar-btn" title="Browser" disabled>
-            <i data-feather="globe" class="w-6 h-6"></i>
-          </button>
-          <button data-panel="memory" class="sidebar-btn" title="Memory" disabled>
-            <i data-feather="database" class="w-6 h-6"></i>
-          </button>
-          <button data-panel="skills" class="sidebar-btn" title="Skills" disabled>
-            <i data-feather="zap" class="w-6 h-6"></i>
-          </button>
+          <!-- Add more when ready -->
         </nav>
 
         <div class="mt-auto flex flex-col gap-4">
@@ -45,7 +39,7 @@ class AxiomSidebar extends HTMLElement {
     this.querySelectorAll('[data-panel]').forEach(btn => {
       btn.addEventListener('click', () => {
         const panel = btn.dataset.panel;
-        window.AxiomBus.emit('panel:switch', panel);
+        AxiomBus.emit('panel:switch', panel);
         this.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active', 'text-primary-500'));
         btn.classList.add('active', 'text-primary-500');
       });
