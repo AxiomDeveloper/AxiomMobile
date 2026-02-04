@@ -1,78 +1,80 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Axiom Mobile - Agentic AI OS</title>
-    <meta name="description" content="Local-first agentic AI web application">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>A</text></svg>">
-    
-    <!-- Tailwind via CDN + custom config -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: {
-                colors: {
-                    primary: { 500: '#6366f1', 600: '#4f46e5' },
-                    secondary: { 500: '#10b981' },
-                    surface: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
-                }
-            }}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Axiom Mobile – Agentic OS</title>
+  
+  <!-- Tailwind CDN + custom config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { 500: '#6366f1', 600: '#4f46e5' },
+            secondary: { 500: '#10b981' },
+            surface: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
+          }
         }
-    </script>
+      }
+    }
+  </script>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <!-- Monaco Editor loader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+  <!-- Monaco Editor loader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
 
-    <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
 
-    <!-- LocalForage -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+  <!-- localForage (IndexedDB wrapper) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
 
-    <!-- Marked + DOMPurify -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+  <!-- Marked (Markdown) + DOMPurify -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 
-    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-surface-950 text-gray-100 font-sans h-screen w-screen overflow-hidden antialiased">
+<body class="bg-surface-950 text-gray-100 font-sans h-screen overflow-hidden antialiased">
 
-    <!-- Loading -->
-    <div id="loading" class="fixed inset-0 bg-surface-950 z-50 flex items-center justify-center">
-        <div class="text-center">
-            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 animate-pulse"></div>
-            <h1 class="text-2xl font-bold">Axiom Mobile</h1>
-            <p class="text-gray-400 mt-2">Initializing...</p>
-        </div>
-    </div>
+  <!-- Loading overlay -->
+  <div id="loading" class="fixed inset-0 bg-surface-950 z-50 flex flex-col items-center justify-center">
+    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 animate-pulse mb-6"></div>
+    <h1 class="text-3xl font-bold tracking-tight">Axiom Mobile</h1>
+    <p class="text-gray-400 mt-2">Agentic OS initializing...</p>
+  </div>
 
-    <!-- App -->
-    <app-shell></app-shell>
+  <app-shell></app-shell>
 
-    <!-- Components -->
-    <script src="components/sidebar.js"></script>
-    <script src="components/app-shell.js"></script>
-    <script src="components/chat-panel.js"></script>
-    <script src="components/ide-panel.js"></script>
-    <script src="components/task-panel.js"></script>
+  <!-- Import all as modules (order: core first, then components) -->
+  <script type="module">
+    import './core/bus.js';
+    import './core/state.js';
+    import './core/agent.js';
+    import './components/sidebar.js';
+    import './components/app-shell.js';
+    import './components/chat-panel.js';
+    import './components/ide-panel.js';
+    import './components/task-panel.js';
+  </script>
 
-    <!-- Core logic -->
-    <script src="script.js"></script>
+  <script>
+    feather.replace();
 
-    <script>
-        feather.replace();
-        // Hide loader
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loading').style.opacity = '0';
-                setTimeout(() => document.getElementById('loading').remove(), 600);
-            }, 800);
-        });
-    </script>
+    // Hide loader after short delay
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const loader = document.getElementById('loading');
+        loader.style.opacity = '0';
+        loader.style.transition = 'opacity 0.6s';
+        setTimeout(() => loader.remove(), 700);
+      }, 1200);
+    });
+  </script>
 </body>
 </html>
