@@ -1,23 +1,19 @@
+// components/chat-panel.js (enhanced with thinking animation)
 import { Agent } from '../core/agent.js';
 
 class ChatPanel extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
-      <div class="h-full flex flex-col bg-surface-900">
-        <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-6"></div>
-
-        <div class="p-6 border-t border-gray-800 bg-surface-900">
-          <div class="flex gap-3 max-w-4xl mx-auto">
-            <textarea id="chat-input" rows="1" placeholder="Ask anything... (Shift+Enter for new line)"
-              class="flex-1 bg-surface-800 rounded-xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"></textarea>
-            <button id="send-btn" class="px-6 bg-primary-600 hover:bg-primary-700 rounded-xl font-medium transition">
-              Send
-            </button>
+      <div class="h-full flex flex-col">
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 max-w-4xl mx-auto w-full"></div>
+        <div id="chat-input-container" class="p-6 border-t border-surface-700">
+          <div class="relative max-w-4xl mx-auto">
+            <textarea id="chat-input" rows="1" placeholder="Ask the agent..." class="w-full pr-24"></textarea>
+            <button id="send-btn" class="absolute right-3 top-1/2 -translate-y-1/2">Send</button>
           </div>
         </div>
       </div>
     `;
-
     this.setup();
   }
 
@@ -27,41 +23,45 @@ class ChatPanel extends HTMLElement {
     const messages = this.querySelector('#chat-messages');
 
     const addMessage = (content, isUser = false) => {
-      const msg = document.createElement('div');
-      msg.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
-      msg.innerHTML = `
-        <div class="max-w-3xl ${isUser ? 'bg-primary-600 text-white' : 'bg-surface-800'} rounded-2xl px-5 py-3.5">
-          ${marked.parse(DOMPurify.sanitize(content))}
-        </div>
-      `;
-      messages.appendChild(msg);
+      const div = document.createElement('div');
+      div.className = `chat-bubble ${isUser ? 'user-bubble' : 'agent-bubble'}`;
+      div.innerHTML = DOMPurify.sanitize(marked.parse(content));
+      messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
     };
 
-    const send = async () => {
+    const addThinking = () => {
+      const div = document.createElement('div');
+      div.className = 'agent-bubble thinking';
+      div.innerHTML = '<div class="flex gap-1"><div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div></div>';
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    };
+
+    sendBtn.addEventListener('click', async () => {
       const text = input.value.trim();
       if (!text) return;
       addMessage(text, true);
       input.value = '';
+      input.style.height = 'auto';
 
-      addMessage("Thinking...");
+      const thinkingEl = addThinking();
       const reply = await Agent.processMessage(text);
-      messages.lastElementChild.remove();
+      thinkingEl.remove();
       addMessage(reply.content);
-    };
+    });
 
-    sendBtn.onclick = send;
-    input.addEventListener('keydown', e => {
+    input.addEventListener('keypress', e => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        send();
+        sendBtn.click();
       }
     });
 
-    // Auto-resize textarea
     input.addEventListener('input', () => {
       input.style.height = 'auto';
-      input.style.height = input.scrollHeight + 'px';
+      input.style.height = `${input.scrollHeight}px`;
     });
   }
 }
