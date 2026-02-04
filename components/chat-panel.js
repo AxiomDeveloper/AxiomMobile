@@ -1,3 +1,5 @@
+import { Agent } from '../core/agent.js';
+
 class ChatPanel extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
@@ -43,13 +45,9 @@ class ChatPanel extends HTMLElement {
       input.value = '';
 
       addMessage("Thinking...");
-      await new Promise(r => setTimeout(r, 1400));
+      const reply = await Agent.processMessage(text);
       messages.lastElementChild.remove();
-
-      // Placeholder agent response — replace with real LLM call later
-      const reply = await window.Agent?.processMessage?.(text) || 
-        "Hello! This is a simulated agent response.\n\nTry asking about code, tasks, or web browsing.";
-      addMessage(reply);
+      addMessage(reply.content);
     };
 
     sendBtn.onclick = send;
