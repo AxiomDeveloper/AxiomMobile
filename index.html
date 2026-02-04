@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Axiom Mobile – Agentic OS</title>
-  
+
   <!-- Tailwind CDN + custom config -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -22,19 +22,19 @@
     }
   </script>
 
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Monaco Editor loader -->
+  <!-- Monaco loader -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
 
   <!-- Feather Icons -->
   <script src="https://unpkg.com/feather-icons"></script>
 
-  <!-- localForage (IndexedDB wrapper) -->
+  <!-- localForage -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
 
-  <!-- Marked (Markdown) + DOMPurify -->
+  <!-- Marked + DOMPurify -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 
@@ -42,43 +42,46 @@
 </head>
 <body class="bg-surface-950 text-gray-100 font-sans h-screen overflow-hidden antialiased">
 
-  <!-- Loading overlay with progress -->
+  <!-- Loading screen -->
   <div id="loading" class="fixed inset-0 bg-surface-950 z-50 flex flex-col items-center justify-center transition-opacity duration-600">
     <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 animate-pulse mb-6"></div>
     <h1 class="text-3xl font-bold tracking-tight">Axiom Mobile</h1>
-    <p id="loading-status" class="text-gray-400 mt-2">Agentic OS initializing...</p>
+    <p id="loading-status" class="text-gray-400 mt-2 min-h-[1.5rem]">Agentic OS initializing...</p>
   </div>
 
   <app-shell></app-shell>
 
-  <!-- Error icon (hidden by default) -->
-  <button id="error-icon" class="fixed bottom-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg hover:bg-red-700 transition hidden" title="View Errors">
+  <!-- Floating error indicator -->
+  <button id="error-icon" class="fixed bottom-6 right-6 w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-2xl hover:bg-red-700 transition hidden z-50" title="Show error details">
     !
   </button>
 
-  <!-- Error modal (hidden by default) -->
-  <div id="error-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
-    <div class="bg-surface-900 p-6 rounded-xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
-      <h2 class="text-xl font-bold mb-4 text-red-400">App Load Error</h2>
-      <pre id="error-details" class="bg-surface-800 p-4 rounded text-sm whitespace-pre-wrap overflow-x-auto"></pre>
-      <div class="mt-4 flex justify-end gap-3">
-        <button id="copy-error" class="px-4 py-2 bg-primary-600 rounded hover:bg-primary-700">Copy to Clipboard</button>
-        <button id="close-modal" class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600">Close</button>
+  <!-- Error modal -->
+  <div id="error-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-surface-900 rounded-2xl p-6 max-w-2xl w-full max-h-[85vh] overflow-y-auto border border-red-900/30 shadow-2xl">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold text-red-400">Initialization Error</h2>
+        <button id="close-modal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+      </div>
+      <pre id="error-details" class="bg-surface-800 p-5 rounded-xl text-sm font-mono whitespace-pre-wrap break-words overflow-x-auto mb-6 border border-gray-700"></pre>
+      <div class="flex justify-end gap-4">
+        <button id="copy-error" class="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 rounded-lg font-medium transition">Copy Details</button>
+        <button id="close-modal-bottom" class="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 rounded-lg transition">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- Import all as modules (launcher last to oversee everything) -->
+  <!-- Module imports -->
   <script type="module">
     import './core/bus.js';
     import './core/state.js';
     import './core/agent.js';
+    import './core/launcher.js';
     import './components/sidebar.js';
     import './components/app-shell.js';
     import './components/chat-panel.js';
     import './components/ide-panel.js';
     import './components/task-panel.js';
-    import './core/launcher.js';  // New: handles error tracking and load
   </script>
 
   <script>
