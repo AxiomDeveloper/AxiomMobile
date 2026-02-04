@@ -1,3 +1,5 @@
+import { AxiomState } from '../core/state.js';
+
 class TaskPanel extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
@@ -21,7 +23,7 @@ class TaskPanel extends HTMLElement {
   }
 
   async loadTasks() {
-    const tasks = (await window.AxiomState?.get('tasks')) || [];
+    const tasks = await AxiomState.get('tasks') || [];
     const list = this.querySelector('#task-list');
     list.innerHTML = tasks.length ? tasks.map(t => `
       <li class="flex items-center gap-4 p-4 bg-surface-800 rounded-xl">
@@ -39,9 +41,9 @@ class TaskPanel extends HTMLElement {
       const title = input.value.trim();
       if (!title) return;
 
-      let tasks = (await window.AxiomState?.get('tasks')) || [];
+      let tasks = await AxiomState.get('tasks') || [];
       tasks.push({ title, done: false });
-      await window.AxiomState?.set('tasks', tasks);
+      await AxiomState.set('tasks', tasks);
 
       input.value = '';
       this.loadTasks();
