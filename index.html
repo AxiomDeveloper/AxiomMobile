@@ -2,10 +2,10 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Axiom Mobile – Agentic OS</title>
-
-  <!-- Tailwind CDN + custom config -->
+  
+  <!-- Tailwind CDN + enhanced config for Grok/ChatGPT-like feel -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -13,19 +13,29 @@
       theme: {
         extend: {
           colors: {
-            primary: { 500: '#6366f1', 600: '#4f46e5' },
-            secondary: { 500: '#10b981' },
-            surface: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
+            primary: { 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' },
+            secondary: { 500: '#10b981', 600: '#059669' },
+            surface: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
+            accent: '#a5b4fc',
+            error: '#ef4444'
+          },
+          borderRadius: {
+            'xl': '1rem',
+            '2xl': '1.5rem'
+          },
+          boxShadow: {
+            'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+            'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)'
           }
         }
       }
     }
   </script>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Fonts for clean IDE/ChatGPT look -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Monaco loader -->
+  <!-- Monaco Editor -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
 
   <!-- Feather Icons -->
@@ -34,44 +44,46 @@
   <!-- localForage -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
 
-  <!-- Marked + DOMPurify -->
+  <!-- Marked + DOMPurify for chat markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-surface-950 text-gray-100 font-sans h-screen overflow-hidden antialiased">
+<body class="bg-surface-950 text-gray-100 font-sans h-screen overflow-hidden antialiased select-text">
 
-  <!-- Loading screen -->
-  <div id="loading" class="fixed inset-0 bg-surface-950 z-50 flex flex-col items-center justify-center transition-opacity duration-600">
-    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 animate-pulse mb-6"></div>
-    <h1 class="text-3xl font-bold tracking-tight">Axiom Mobile</h1>
-    <p id="loading-status" class="text-gray-400 mt-2 min-h-[1.5rem]">Agentic OS initializing...</p>
+  <!-- Enhanced loading overlay with progress and animation -->
+  <div id="loading" class="fixed inset-0 bg-surface-950 z-50 flex flex-col items-center justify-center transition-opacity duration-600 opacity-100">
+    <div class="relative w-20 h-20 mb-6">
+      <div class="absolute inset-0 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 animate-pulse blur-md"></div>
+      <div class="absolute inset-2 rounded-full bg-surface-950"></div>
+      <div class="absolute inset-4 flex items-center justify-center text-primary-500 font-bold text-2xl">A</div>
+    </div>
+    <h1 class="text-3xl font-bold tracking-tight mb-2">Axiom Mobile</h1>
+    <p id="loading-status" class="text-gray-400 text-center px-4">Initializing Agentic OS...</p>
   </div>
 
+  <!-- App shell -->
   <app-shell></app-shell>
 
-  <!-- Floating error indicator -->
-  <button id="error-icon" class="fixed bottom-6 right-6 w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-2xl hover:bg-red-700 transition hidden z-50" title="Show error details">
+  <!-- Error indicator -->
+  <button id="error-icon" class="fixed bottom-6 right-6 w-12 h-12 bg-error rounded-full flex items-center justify-center text-white text-xl font-bold shadow-lg hover:bg-red-500 transition hidden z-50" title="View errors">
     !
   </button>
 
   <!-- Error modal -->
-  <div id="error-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-surface-900 rounded-2xl p-6 max-w-2xl w-full max-h-[85vh] overflow-y-auto border border-red-900/30 shadow-2xl">
-      <div class="flex items-center justify-between mb-5">
-        <h2 class="text-2xl font-bold text-red-400">Initialization Error</h2>
-        <button id="close-modal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
-      </div>
-      <pre id="error-details" class="bg-surface-800 p-5 rounded-xl text-sm font-mono whitespace-pre-wrap break-words overflow-x-auto mb-6 border border-gray-700"></pre>
-      <div class="flex justify-end gap-4">
-        <button id="copy-error" class="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 rounded-lg font-medium transition">Copy Details</button>
-        <button id="close-modal-bottom" class="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 rounded-lg transition">Close</button>
+  <div id="error-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden p-6">
+    <div class="bg-surface-900 rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl border border-surface-700">
+      <h2 class="text-2xl font-bold mb-4 text-error">Initialization Error</h2>
+      <pre id="error-details" class="bg-surface-800 p-4 rounded-xl text-sm font-mono whitespace-pre-wrap overflow-x-auto border border-surface-700"></pre>
+      <div class="mt-6 flex justify-end gap-4">
+        <button id="copy-error" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 rounded-lg transition">Copy Details</button>
+        <button id="close-modal" class="px-5 py-2 bg-surface-800 hover:bg-surface-700 rounded-lg transition">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- Module imports -->
+  <!-- Module imports (core first) -->
   <script type="module">
     import './core/bus.js';
     import './core/state.js';
