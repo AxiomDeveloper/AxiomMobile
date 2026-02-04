@@ -42,16 +42,33 @@
 </head>
 <body class="bg-surface-950 text-gray-100 font-sans h-screen overflow-hidden antialiased">
 
-  <!-- Loading overlay -->
-  <div id="loading" class="fixed inset-0 bg-surface-950 z-50 flex flex-col items-center justify-center">
+  <!-- Loading overlay with progress -->
+  <div id="loading" class="fixed inset-0 bg-surface-950 z-50 flex flex-col items-center justify-center transition-opacity duration-600">
     <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 animate-pulse mb-6"></div>
     <h1 class="text-3xl font-bold tracking-tight">Axiom Mobile</h1>
-    <p class="text-gray-400 mt-2">Agentic OS initializing...</p>
+    <p id="loading-status" class="text-gray-400 mt-2">Agentic OS initializing...</p>
   </div>
 
   <app-shell></app-shell>
 
-  <!-- Import all as modules (order: core first, then components) -->
+  <!-- Error icon (hidden by default) -->
+  <button id="error-icon" class="fixed bottom-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg hover:bg-red-700 transition hidden" title="View Errors">
+    !
+  </button>
+
+  <!-- Error modal (hidden by default) -->
+  <div id="error-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+    <div class="bg-surface-900 p-6 rounded-xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
+      <h2 class="text-xl font-bold mb-4 text-red-400">App Load Error</h2>
+      <pre id="error-details" class="bg-surface-800 p-4 rounded text-sm whitespace-pre-wrap overflow-x-auto"></pre>
+      <div class="mt-4 flex justify-end gap-3">
+        <button id="copy-error" class="px-4 py-2 bg-primary-600 rounded hover:bg-primary-700">Copy to Clipboard</button>
+        <button id="close-modal" class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import all as modules (launcher last to oversee everything) -->
   <script type="module">
     import './core/bus.js';
     import './core/state.js';
@@ -61,20 +78,11 @@
     import './components/chat-panel.js';
     import './components/ide-panel.js';
     import './components/task-panel.js';
+    import './core/launcher.js';  // New: handles error tracking and load
   </script>
 
   <script>
     feather.replace();
-
-    // Hide loader after short delay
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const loader = document.getElementById('loading');
-        loader.style.opacity = '0';
-        loader.style.transition = 'opacity 0.6s';
-        setTimeout(() => loader.remove(), 700);
-      }, 1200);
-    });
   </script>
 </body>
 </html>
