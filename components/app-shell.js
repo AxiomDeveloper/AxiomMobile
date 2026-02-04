@@ -1,3 +1,5 @@
+import { AxiomBus } from '../core/bus.js';
+
 class AppShell extends HTMLElement {
   constructor() {
     super();
@@ -27,7 +29,7 @@ class AppShell extends HTMLElement {
       </div>
     `;
 
-    window.AxiomBus.on('panel:switch', (panel) => {
+    AxiomBus.on('panel:switch', (panel) => {
       this.currentPanel = panel;
       this.querySelectorAll('.panel').forEach(el => {
         el.classList.toggle('active', el.tagName.toLowerCase() === `${panel}-panel`);
