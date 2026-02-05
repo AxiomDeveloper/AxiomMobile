@@ -8,34 +8,38 @@
 </head>
 <body>
 
-  <header>
-    <h1>🧠 AI Mail Agent</h1>
-    <p>Smart, agentic email cleanup for Gmail & iCloud</p>
-  </header>
+<header>
+  <h1>🧠 AI Mail Agent</h1>
+  <p>Smart, agentic email cleanup for Gmail & iCloud</p>
+</header>
 
-  <main>
-    <section class="auth">
-      <button id="gmailBtn">Connect Gmail</button>
-      <button id="icloudBtn">Connect iCloud</button>
-    </section>
+<main>
 
-    <section id="dashboard" class="card hidden">
-      <h2>Inbox Intelligence</h2>
+  <section class="auth">
+    <button id="gmailBtn">Connect Gmail</button>
+    <button id="icloudBtn">Connect iCloud</button>
+  </section>
 
-      <div class="actions">
-        <button id="analyzeBtn">Run Deep Analysis</button>
-        <button id="cleanupBtn">Generate Cleanup Plan</button>
-      </div>
+  <section id="dashboard" class="card hidden">
+    <h2>Inbox Intelligence</h2>
 
-      <pre id="output">Waiting for analysis…</pre>
-    </section>
-  </main>
+    <div class="actions">
+      <button id="analyzeBtn">Run Deep Analysis</button>
+      <button id="cleanupBtn">Generate Cleanup Plan</button>
+    </div>
 
-  <footer>
-    <p>Local UI • Secure backend • Agent-driven cleanup</p>
-  </footer>
+    <pre id="output">Waiting for analysis…</pre>
+  </section>
 
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+</main>
+
+<footer>
+  <p>Local UI • Hugging Face LLM • Agent-driven logic</p>
+</footer>
+
+<script src="config.js"></script>
+<script src="llm.js"></script>
+<script src="agent.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
