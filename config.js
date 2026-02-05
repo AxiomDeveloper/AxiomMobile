@@ -1,7 +1,8 @@
 window.CONFIG = {
-  API_BASE: "https://your-backend.workers.dev",
-  FEATURES: {
-    autoCleanup: false,
-    agentMode: true
+  HF_SPACE_URL: "https://YOUR-USERNAME-YOUR-SPACE.hf.space/run/predict",
+
+  AGENT: {
+    maxTokens: 120,
+    mode: "deterministic"
   }
 };
