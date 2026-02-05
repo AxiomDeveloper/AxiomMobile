@@ -28,7 +28,7 @@ Return JSON:
 }
 `;
 
-  const result = await callLLM(prompt);
+  const result = await window.callLLM(prompt);
   return safeJSON(result);
 }
 
@@ -47,7 +47,7 @@ Return JSON:
 }
 `;
 
-  const result = await callLLM(prompt);
+  const result = await window.callLLM(prompt);
   return safeJSON(result);
 }
 
