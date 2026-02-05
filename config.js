@@ -1,5 +1,5 @@
 window.CONFIG = {
-  HF_SPACE_URL: "https://tomiconic-ai-mail-agent-llm.hf.space/run/predict",
+  HF_SPACE_URL: "https://huggingface.co/spaces/tomiconic/ai-mail-agent-llm",
 
   AGENT: {
     maxTokens: 120,
