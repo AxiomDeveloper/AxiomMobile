@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <title>AI Mail Agent</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
   <header>
     <h1>🧠 AI Mail Agent</h1>
-    <p>Intelligent Gmail & iCloud cleanup</p>
+    <p>Smart, agentic email cleanup for Gmail & iCloud</p>
   </header>
 
   <main>
@@ -18,13 +19,21 @@
       <button id="icloudBtn">Connect iCloud</button>
     </section>
 
-    <section id="dashboard" hidden>
+    <section id="dashboard" class="card hidden">
       <h2>Inbox Intelligence</h2>
-      <div id="insights"></div>
-      <button id="analyze">Run Deep Analysis</button>
-      <button id="cleanup">Suggest Cleanup</button>
+
+      <div class="actions">
+        <button id="analyzeBtn">Run Deep Analysis</button>
+        <button id="cleanupBtn">Generate Cleanup Plan</button>
+      </div>
+
+      <pre id="output">Waiting for analysis…</pre>
     </section>
   </main>
+
+  <footer>
+    <p>Local UI • Secure backend • Agent-driven cleanup</p>
+  </footer>
 
   <script src="config.js"></script>
   <script src="app.js"></script>
